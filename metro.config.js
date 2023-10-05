@@ -17,7 +17,7 @@ module.exports = {
     }),
   },
   watchFolders: [
-    path.resolve(__dirname, '../../', nm),
-    path.resolve(__dirname, '../../packages/react-native-carplay'),
+    path.resolve(__dirname, '', nm),
+    path.resolve(__dirname, 'node_modules/react-native-carplay'),
   ],
 };
