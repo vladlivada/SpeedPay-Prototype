@@ -25,6 +25,8 @@ export const GetLocations = () => {
             return {
               ...prev,
               ...position.coords,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
             };
           });
           setInitialRegion(prev => {
