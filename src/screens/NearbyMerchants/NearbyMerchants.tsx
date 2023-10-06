@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useContext, useEffect} from 'react';
 import MapView, {Marker, Region} from 'react-native-maps';
 import {compareCoordinates} from '../../utils/coordinates';
@@ -134,7 +134,9 @@ function NearbyMerchantsScreen({isConnected}: any): JSX.Element {
               </Marker.Animated>
           )}
           {merchantLocations.map((location, index) => (
-              <Marker key={index} coordinate={location} title={location.name}/>
+              <Marker key={index} coordinate={location} title={location.name}>
+                  <View style={{width: 50, height:50, backgroundColor: 'red', borderRadius: 50, opacity: 0.3}}></View>
+              </Marker>
           ))}
         </MapView>
       </View>
