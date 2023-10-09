@@ -6,6 +6,7 @@ import MapView from 'react-native-maps';
 import NearbyMerchantsScreen from "../NearbyMerchants/NearbyMerchants";
 import CarplayContext from "../../store/carplay-context";
 import {BaseEvent} from "react-native-carplay/lib/templates/Template";
+import CarplayMode from "../../components/CarplayMode/CarplayMode";
 
 
 interface NavigationMapViewProps {
@@ -22,18 +23,6 @@ function NavigationMapView({ctx}: NavigationMapViewProps) {
 export function Map({navigation}: any) {
   const mapTemplate = useRef<MapTemplate>();
   const ctx = useContext(CarplayContext);
-  const onShowAlertPress = () => {
-    mapTemplate.current?.presentNavigationAlert({
-      titleVariants: ['Test 1'],
-      primaryAction: { title: 'Test 2' },
-      secondaryAction: { title: 'Test 3' },
-      duration: 1000,
-    });
-  };
-
-  const onDismissAlertPress = () => {
-    mapTemplate.current?.dismissNavigationAlert(true);
-  };
 
   const onShowPanningPress = () => {
     mapTemplate.current?.showPanningInterface(true);
@@ -52,11 +41,9 @@ export function Map({navigation}: any) {
       onWillDisappear(e: BaseEvent) {
         navigation.navigate('Menu')
       },
-      onAlertActionPressed(e: any) {
-
-      },
-      onStartedTrip() {
-      },
+      onPanWithDirection(e: { direction: string }) {
+        console.log(e);
+      }
     };
 
     if (!mapTemplate.current) {
@@ -66,13 +53,12 @@ export function Map({navigation}: any) {
     }
 
     CarPlay.pushTemplate(mapTemplate.current, false);
+
     return () => CarPlay.popToRootTemplate(true);
   }, [ctx.isConnected]);
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{textAlign: 'center'}}>App is running in carplay mode now, please check car's entertainment system</Text>
-    </View>
+      <CarplayMode/>
   );
 }
 

@@ -1,15 +1,17 @@
 import {CarPlay, InformationTemplate} from 'react-native-carplay';
 import {Text} from "react-native";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {endpoints} from "../../utils/endpoints";
 import {BaseEvent} from "react-native-carplay/lib/templates/Template";
+import CarplayMode from "../../components/CarplayMode/CarplayMode";
 
 
 export const PaymentsCarView = ({navigation}: any) => {
 
 
   const [paymentsList, setPaymentsList] = useState([] as Array<any>);
+
   async function getUser() {
     return JSON.parse((await AsyncStorage.getItem('user')) as string);
   }
@@ -35,15 +37,16 @@ export const PaymentsCarView = ({navigation}: any) => {
           fetchedPaymentsList.filter((payment: any) => payment.status !== 'OPEN'),
       );
 
-      const paymentsArray = fetchedPaymentsList.filter((payment: any) => payment.status !== 'OPEN').map((payment: any) => ({title: payment.merchant.name,
-        detail: `Status: ${payment.status}, Amount: ${payment.amount}lei`}))
+      const paymentsArray = fetchedPaymentsList.filter((payment: any) => payment.status !== 'OPEN').map((payment: any) => ({
+        title: payment.merchant.name,
+        detail: `Status: ${payment.status}, Amount: ${payment.amount}lei`
+      }))
       const lastPayments = paymentsArray.slice(-5).reverse();
 
       const template = new InformationTemplate({
         title: 'Payments',
-        items:  lastPayments as any,
-        actions: [
-        ],
+        items: lastPayments as any,
+        actions: [],
         onActionButtonPressed(action) {
 
         },
@@ -58,5 +61,5 @@ export const PaymentsCarView = ({navigation}: any) => {
     init();
   }, []);
 
-  return(<Text>Check car view</Text>)
+  return (<CarplayMode/>)
 }

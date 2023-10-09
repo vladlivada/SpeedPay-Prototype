@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, NativeEventEmitter, NativeModules, Text, View} from 'react-native';
+import {Button, NativeEventEmitter, NativeModules, View} from 'react-native';
 
 import {createNavigationContainerRef, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -15,6 +15,7 @@ import CarplayContext from "./store/carplay-context";
 import {PaymentsCarView} from "./screens/CarIntegration/Payments";
 
 const Stack = createStackNavigator();
+
 
 export const App = () => {
   const [carPlayConnected, setCarPlayConnected] = useState(CarPlay.connected);
@@ -55,10 +56,14 @@ export const App = () => {
     {
       carPlayConnected ? (
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Menu">
+            <Stack.Navigator screenOptions={{
+              headerBackground: () =>
+              <View style={{flex: 1, backgroundColor: '#F9B341'}}/>,
+              backgroundColor: '#F9B341'
+            } as any} initialRouteName="Menu">
               <Stack.Screen name="Map" component={Map}/>
               <Stack.Screen name="Menu" component={Menu}/>
-              <Stack.Screen name="PaymentsView" component={PaymentsCarView} />
+              <Stack.Screen name="PaymentsView" component={PaymentsCarView}/>
             </Stack.Navigator>
           </NavigationContainer>
       ) : (
@@ -98,14 +103,14 @@ export const App = () => {
                           }}
                       />
                     </Stack.Navigator>
-                    <BottomNavigation nav={navigationRef} />
+                    <BottomNavigation nav={navigationRef}/>
                   </>
               ) : (
                   <>
                     <Stack.Navigator>
                       <Stack.Screen name="Login">
                         {props => (
-                            <LoginScreen {...props} props={{changeSignedInState}} />
+                            <LoginScreen {...props} props={{changeSignedInState}}/>
                         )}
                       </Stack.Screen>
                     </Stack.Navigator>

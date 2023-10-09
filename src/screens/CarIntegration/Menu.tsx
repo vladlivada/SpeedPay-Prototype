@@ -1,14 +1,15 @@
 import React, {useEffect} from 'react';
 import {Button, Text, View} from 'react-native';
 import {CarPlay, ListTemplate} from 'react-native-carplay';
+import CarplayMode from "../../components/CarplayMode/CarplayMode";
 
-export function Menu({ navigation }: any) {
+export function Menu({navigation}: any) {
   useEffect(() => {
     const menuTemplate = new ListTemplate({
       sections: [
         {
           header: 'SpeedPay Titans',
-          items: [{ text: 'Nearby Merchants'}, {text: 'Payments'}],
+          items: [{text: 'Nearby Merchants'}, {text: 'Payments'}],
         },
       ],
       title: '',
@@ -26,9 +27,7 @@ export function Menu({ navigation }: any) {
   const onPaymentPress = () => navigation.navigate('PaymentsView');
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>App is now in Carplay mode</Text>
-    </View>
+      <CarplayMode/>
   );
 }
 
