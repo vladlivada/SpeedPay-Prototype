@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {Button, Text, View} from 'react-native';
 import {CarPlay, ListTemplate} from 'react-native-carplay';
 import CarplayMode from "../../components/CarplayMode/CarplayMode";
 

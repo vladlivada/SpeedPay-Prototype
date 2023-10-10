@@ -1,8 +1,6 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
-// @ts-ignore
-import {CarPlay, MapTemplate, MapTemplateConfig, NavigationSession,} from 'react-native-carplay';
-import MapView from 'react-native-maps';
+import React, {useContext, useEffect, useRef} from 'react';
+import {View} from 'react-native';
+import {CarPlay, MapTemplate, MapTemplateConfig} from 'react-native-carplay';
 import NearbyMerchantsScreen from "../NearbyMerchants/NearbyMerchants";
 import CarplayContext from "../../store/carplay-context";
 import {BaseEvent} from "react-native-carplay/lib/templates/Template";
