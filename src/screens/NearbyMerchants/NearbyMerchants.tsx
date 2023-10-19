@@ -47,68 +47,82 @@ function NearbyMerchantsScreen({isConnected}: any): JSX.Element {
               },
           );
           if (triggerCall.status === 200) {
-            setTimeout(() => {
-              fetch(
-                  `${endpoints.base}/${endpoints.operations.driver.path}/${driver.id}/transactions`,
-              ).then(response => {
-                response.json().then(transactions => {
-                  if (transactions.length > 0) {
-                    const transaction = transactions[transactions.length - 1];
-                    const accept = () => {
-                      fetch(
-                          `${endpoints.base}/${endpoints.operations.payment.confirm}/${transaction.orderId}`,
-                          {method: 'POST'},
-                      ).then(response => {
-                        console.log(response.status);
-                      });
-                    }
-                    const decline = () => {
-                      fetch(
-                          `${endpoints.base}/${endpoints.operations.payment.decline}/${transaction.orderId}`,
-                          {method: 'POST'},
-                      ).then(response => {
-                        console.log(response.status);
-                      });
-                    }
 
-                    if(!isConnected) {
-                      OpenPaymentAlert(
-                          transaction,
-                          () => decline(),
-                          () => accept(),
-                      );
-                    } else {
-                      const actionSheetTemplate = new ActionSheetTemplate({
-                        title:  `Payment to ${transaction.merchant.name}`,
-                        message: `Do you accept payment of ${transaction.amount} lei for ${transaction.description}?`,
-                        actions: [
-                          {
-                            id: 'ok',
-                            title: 'Accept',
+            let transactionOpen = false;
+            let maximumAlocatedTime = 0;
+            const interval = setInterval(() => {
+              console.log('polling --->', maximumAlocatedTime);
+              maximumAlocatedTime++;
+              if(!transactionOpen && maximumAlocatedTime < 20) {
+                fetch(
+                    `${endpoints.base}/${endpoints.operations.driver.path}/${driver.id}/transactions`,
+                ).then(response => {
+                  response.json().then(transactions => {
+                    const filteredTransactions = transactions.filter(
+                        (transaction: any) =>{
+                          return transaction.merchant.id === matchedLocation.id && transaction.status === 'OPEN'}
+                    )
+                    if (filteredTransactions.length > 0) {
+                      const transaction = filteredTransactions[filteredTransactions.length - 1];
+                      transactionOpen = true
+                      const accept = () => {
+                        fetch(
+                            `${endpoints.base}/${endpoints.operations.payment.confirm}/${transaction.orderId}`,
+                            {method: 'POST'},
+                        ).then(response => {
+                          console.log(response.status);
+                        });
+                      }
+                      const decline = () => {
+                        fetch(
+                            `${endpoints.base}/${endpoints.operations.payment.decline}/${transaction.orderId}`,
+                            {method: 'POST'},
+                        ).then(response => {
+                          console.log(response.status);
+                        });
+                      }
+
+                      if(!isConnected) {
+                        OpenPaymentAlert(
+                            transaction,
+                            () => decline(),
+                            () => accept(),
+                        );
+                      } else {
+                        const actionSheetTemplate = new ActionSheetTemplate({
+                          title:  `Payment to ${transaction.merchant.name}`,
+                          message: `Do you accept payment of ${transaction.amount} lei for ${transaction.description}?`,
+                          actions: [
+                            {
+                              id: 'ok',
+                              title: 'Accept',
+                            },
+                            {
+                              id: 'remove',
+                              title: 'Decline',
+                              style: 'destructive',
+                            },
+                          ],
+                          onActionButtonPressed({ id }) {
+                            switch (id) {
+                              case 'ok':
+                                return accept();
+                              case 'remove':
+                                return decline();
+                            }
                           },
-                          {
-                            id: 'remove',
-                            title: 'Decline',
-                            style: 'destructive',
-                          },
-                        ],
-                        onActionButtonPressed({ id }) {
-                          switch (id) {
-                            case 'ok':
-                              return accept();
-                            case 'remove':
-                              return decline();
-                          }
-                        },
-                      });
+                        });
 
-                      CarPlay.presentTemplate(actionSheetTemplate);
+                        CarPlay.presentTemplate(actionSheetTemplate);
+                      }
+
                     }
-
-                  }
+                  });
                 });
-              });
-            }, 1000);
+              } else {
+                clearInterval(interval);
+              }
+            }, 2000)
           }
         };
         triggerPayment();

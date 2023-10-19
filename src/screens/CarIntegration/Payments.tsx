@@ -37,8 +37,8 @@ export const PaymentsCarView = ({navigation}: any) => {
       );
 
       const paymentsArray = fetchedPaymentsList.filter((payment: any) => payment.status !== 'OPEN').map((payment: any) => ({
-        title: payment.merchant.name,
-        detail: `Status: ${payment.status}, Amount: ${payment.amount}lei`
+        title:`Merchant: ${payment.merchant.name} Product: ${payment.description}`,
+        detail: `Status: ${payment.status}, Amount: ${parseFloat(payment.amount).toFixed(2)}lei`
       }))
       const lastPayments = paymentsArray.slice(-5).reverse();
 
